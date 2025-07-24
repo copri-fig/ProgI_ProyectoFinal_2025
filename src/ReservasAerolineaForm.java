@@ -14,7 +14,7 @@ public class ReservasAerolineaForm {
     private JPanel panelAsientos;
     private JPanel panelEconomico;
     private JPanel panelEjecutivo;
-    private JPanel panelInformacion;
+    private JPanel panelControles;
     private JButton btnReservar;
     private JButton btnLimpiar;
     private JButton btnMostrarBoleto;
