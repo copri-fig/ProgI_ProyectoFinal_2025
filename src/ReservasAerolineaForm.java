@@ -72,6 +72,8 @@ public class ReservasAerolineaForm extends JFrame {
         grupoPreferencia.add(rbPasillo);
         grupoPreferencia.add(rbCentro);
     }
+
+    
     //Main
     public static void main(String[] args) {
         try{
