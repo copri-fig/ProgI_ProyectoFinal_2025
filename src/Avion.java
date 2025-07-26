@@ -26,4 +26,20 @@ public class Avion {
         }
 
     }
+
+    public Asiento[][] getEjecutivo() {
+        return ejecutivo;
+    }
+
+    public void setEjecutivo(Asiento[][] ejecutivo) {
+        this.ejecutivo = ejecutivo;
+    }
+
+    public Asiento[][] getEconomico() {
+        return economico;
+    }
+
+    public void setEconomico(Asiento[][] economico) {
+        this.economico = economico;
+    }
 }
