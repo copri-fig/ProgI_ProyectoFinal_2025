@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class ReservasAerolineaForm extends JFrame {
     private JPanel panelPrincipal;
@@ -54,10 +53,27 @@ public class ReservasAerolineaForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-
         setupButtonGroups();
         crearAsientosEjecutivo();
         crearAsientosEconomico();
+
+        //Procesadores de eventos
+        //Acciones para cambiar la clase del boleto
+        rbEconomico.addActionListener(e -> cambioClase());
+        rbEjecutivo.addActionListener(e -> cambioClase());
+        //Boton para reservar boleto
+        btnReservar.addActionListener(e -> {});
+        //Boton para limpiar el formulario
+        btnLimpiar.addActionListener(e -> {limpiarFormulario();});
+
+        //Boton que imprime el ultimo boleto registrado
+        btnMostrarBoleto.addActionListener(e -> {
+            if (txtAreaInfo.getText().contains("RESERVA EXITOSA")) {
+                JOptionPane.showMessageDialog(this, txtAreaInfo.getText(), "Último Boleto", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay boletos para mostrar.", "Sin Información", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
     }
 
@@ -102,7 +118,7 @@ public class ReservasAerolineaForm extends JFrame {
 
                 // Listener para selección de asiento
                 final int f = fila, c = col;
-                //botonesEjecutivo[fila][col].addActionListener(e -> onAsientoSelected(false, f, c));
+                botonesEjecutivo[fila][col].addActionListener(e -> verificarAsiento(false, f, c));
 
                 panelEjecutivo.add(botonesEjecutivo[fila][col]);
 
@@ -151,16 +167,152 @@ public class ReservasAerolineaForm extends JFrame {
 
                 // Listener para selección de asiento
                 final int f = fila, c = col;
-                //botonesEconomico[fila][col].addActionListener(e -> onAsientoSelected(true, f, c));
+                botonesEconomico[fila][col].addActionListener(e -> verificarAsiento(true, f, c));
 
                 panelEconomico.add(botonesEconomico[fila][col]);
             }
         }
         panelEconomico.revalidate();
         panelEconomico.repaint();
-
-
     }
+
+    private void actualizarAparienciaBotones(JButton button, Asiento asiento) {
+        if (asiento.estaOcupado()) {
+            button.setBackground(Color.RED);
+            button.setForeground(Color.WHITE);
+            button.setText("X");
+            button.setEnabled(false);
+        } else if (asiento == asientoSeleccionado) {
+            button.setBackground(Color.YELLOW);
+            button.setForeground(Color.BLACK);
+            button.setEnabled(true);
+        } else {
+            // Color según ubicación
+            switch (asiento.getTipoUbicacion()) {
+                case "ventana":
+                    button.setBackground(new Color(135, 206, 235));
+                    button.setText("V");
+                    break;
+                case "pasillo":
+                    button.setBackground(new Color(250, 101, 7));
+                    button.setText("P");
+                    break;
+                case "centro":
+                    button.setBackground(new Color(255, 182, 193));
+                    button.setText("C");
+                    break;
+            }
+            button.setForeground(Color.BLACK);
+            button.setEnabled(!chkAutomatico.isSelected());
+        }
+    }
+
+    private void actualizarBotones(JButton[][] botones, Asiento[][] asientos) {
+        if (botones == null) return;
+
+        for (int i = 0; i < botones.length; i++) {
+            for (int j = 0; j < botones[i].length; j++) {
+                if (botones[i][j] != null) {
+                    Asiento asiento = asientos[i][j];
+                    actualizarAparienciaBotones(botones[i][j], asiento);
+                }
+            }
+        }
+    }
+
+    private void actualizarVistaBotones() {
+        actualizarBotones(botonesEjecutivo, avion.getEjecutivo());
+        actualizarBotones(botonesEconomico, avion.getEconomico());
+    }
+
+    private void verificarAsiento(boolean esEconomico, int fila, int columna) {
+        if (chkAutomatico.isSelected()) {
+            return; // Asignación automática activada
+        }
+
+        // Verificar que coincida con la clase seleccionada
+        if (esEconomico != rbEconomico.isSelected()) {
+            JOptionPane.showMessageDialog(this,
+                    "Seleccione un asiento de la clase elegida: " +
+                            (rbEconomico.isSelected() ? "Económica" : "Ejecutiva"),
+                    "Clase Incorrecta",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Obtener asiento
+        Asiento[][] seccion = esEconomico ? avion.getEconomico() : avion.getEjecutivo();
+        Asiento asiento = seccion[fila][columna];
+
+        if (asiento.estaOcupado()) {
+            JOptionPane.showMessageDialog(this,
+                    "Este asiento ya está ocupado.",
+                    "Asiento No Disponible",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Actualizar selección
+        asientoSeleccionado = null;
+        asientoSeleccionado = asiento;
+        actualizarVistaBotones();
+
+        // Mostrar información
+        txtAreaInfo.setText(
+                "=== ASIENTO SELECCIONADO ===\n\n" +
+                        "Posición: Fila " + (fila + 1) + ", Columna " + (columna + 1) + "\n" +
+                        "Ubicación: " + asiento.getTipoUbicacion() + "\n" +
+                        "Clase: " + (esEconomico ? "Económica" : "Ejecutiva") + "\n\n" +
+                        "Presione 'Reservar' para confirmar o seleccione otro asiento."
+        );
+    }
+
+    //Metodo que valida si es economico y habilita la opción de asiento centro
+    private void cambioClase() {
+        // Habilitar/deshabilitar "Centro" según la clase
+        boolean esEconomico = rbEconomico.isSelected();
+        rbCentro.setEnabled(esEconomico);
+
+        if (!esEconomico && rbCentro.isSelected()) {
+            rbVentana.setSelected(true);
+        }
+
+        actualizarVistaBotones();
+        asientoSeleccionado = null;
+    }
+
+    //Metodo que valida si la selección es manual o automática
+    private void validarAsignacion() {
+        boolean esAutomatico = chkAutomatico.isSelected();
+        //enableManualSelection(!esAutomatico);
+
+        if (esAutomatico) {
+            asientoSeleccionado = null;
+        }
+
+        //updateAsientosVisualization();
+    }
+
+    private String getPreferenciaSeleccionada() {
+        if (rbVentana.isSelected()) return "ventana";
+        if (rbPasillo.isSelected()) return "pasillo";
+        if (rbCentro.isSelected()) return "centro";
+        return "ventana";
+    }
+
+    //Metodo para limpiar el formulario
+    private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtCedula.setText("");
+        rbEconomico.setSelected(true);
+        rbVentana.setSelected(true);
+        chkAutomatico.setSelected(true);
+        asientoSeleccionado = null;
+        cambioClase();
+        validarAsignacion();
+        txtNombre.requestFocus();
+    }
+
 
     //Main
     public static void main(String[] args) {
