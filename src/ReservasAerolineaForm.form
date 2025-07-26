@@ -139,7 +139,7 @@
         <children>
           <grid id="d1bbe" binding="panelEconomico" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints border-constraint="South"/>
+            <constraints border-constraint="Center"/>
             <properties/>
             <border type="none" title="Clase Económica"/>
             <children/>

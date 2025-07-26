@@ -18,7 +18,7 @@ public class Asiento {
         return ocupado;
     }
 
-    public boolean reservarPasajero() {
+    public boolean reservarPasajero(Pasajero pasajero) {
         if(!ocupado) {
             this.ocupado = true;
             this.pasajero = pasajero;
