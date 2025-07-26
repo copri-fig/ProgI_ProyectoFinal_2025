@@ -139,7 +139,7 @@ public class ReservasAerolineaForm extends JFrame {
         panelEconomico.removeAll();
 
         panelEconomico.setLayout(new GridLayout(7, 9, 2, 2));
-        botonesEconomico = new JButton[6][6];
+
 
         // Headers de columnas
         panelEconomico.add(new JLabel("", SwingConstants.CENTER));
