@@ -24,6 +24,34 @@ public class Avion {
             economico[i][4] = new Asiento(i + 1, 5, "centro");
             economico[i][5] = new Asiento(i + 1, 6, "ventana");
         }
-
     }
+
+    public Asiento[][] getEjecutivo() { return ejecutivo; }
+    public Asiento[][] getEconomico() { return economico; }
+
+    public Asiento asignarAutomaticamente(boolean esEconomico, String preferencia) {
+        Asiento[][] seccion = esEconomico ? economico : ejecutivo;
+
+        for (int i = 0; i < seccion.length; i++) {
+            for (int j = 0; j < seccion[i].length; j++) {
+                if (!seccion[i][j].estaOcupado() &&
+                        seccion[i][j].getTipoUbicacion().equals(preferencia)) {
+                    return seccion[i][j];
+                }
+            }
+        }
+        for (int i = 0; i < seccion.length; i++) {
+            for (int j = 0; j < seccion[i].length; j++) {
+                if (!seccion[i][j].estaOcupado()) {
+                    return seccion[i][j];
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean reservarAsiento(Asiento asiento, Pasajero pasajero) {
+        return asiento.reservarPasajero(pasajero);
+    }
+
 }
