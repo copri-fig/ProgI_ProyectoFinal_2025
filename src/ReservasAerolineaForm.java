@@ -72,7 +72,56 @@ public class ReservasAerolineaForm extends JFrame {
         });
 
         //Boton para reservar boleto
-        btnReservar.addActionListener(e -> {});
+        btnReservar.addActionListener(e -> {
+            // Validar datos
+        if (!validarDatos()) return;
+        
+        String nombre = txtNombre.getText().trim();
+        String cedula = txtCedula.getText().trim();
+        Pasajero pasajero = new Pasajero(nombre, cedula);
+        
+        Asiento asientoReservar = null;
+        
+        
+        if (modoAutomatico) {  
+            // Asignación automática
+            boolean esEconomico = rbEconomico.isSelected();
+            String preferencia = getPreferenciaSeleccionada();
+            
+            asientoReservar = avion.asignarAutomaticamente(esEconomico, preferencia);
+            
+            if (asientoReservar == null) {
+                JOptionPane.showMessageDialog(this,
+                    "No hay asientos disponibles en la clase seleccionada.",
+                    "Sin Disponibilidad",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+             } else {
+            if (asientoSeleccionado == null) {
+                JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un asiento del mapa.",
+                    "Selección Requerida",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            asientoReservar = asientoSeleccionado;
+        }
+        
+        // Realizar reserva
+        if (avion.reservarAsiento(asientoReservar, pasajero)) {
+            String clase = rbEconomico.isSelected() ? "Económica" : "Ejecutiva";
+            String boleto = asientoReservar.getBoleto(clase);
+            
+            txtAreaInfo.setText("=== RESERVA EXITOSA ===\n\n" + boleto);
+            updateAsientosVisualization();
+            limpiarFormulario();
+            
+            JOptionPane.showMessageDialog(this,
+                "Reserva realizada exitosamente!",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+        } });
         //Boton para limpiar el formulario
         btnLimpiar.addActionListener(e -> {limpiarFormulario();});
 
