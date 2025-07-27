@@ -401,6 +401,21 @@ public class ReservasAerolineaForm extends JFrame {
         }
     }
 
+    private boolean validarDatos() {
+        if (txtNombre.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre del pasajero.");
+            txtNombre.requestFocus();
+            return false;
+        }
+        
+        if (txtCedula.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese la cédula del pasajero.");
+            txtCedula.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
 
     //Main
     public static void main(String[] args) {
