@@ -20,6 +20,8 @@ public class ReservasAerolineaForm extends JFrame {
     private JButton btnLimpiar;
     private JButton btnMostrarBoleto;
     private JTextArea txtAreaInfo;
+    private JPanel panelModo;
+    private JButton btnModoAsignacion;
 
     //Variables adicionales
     private JButton[][] botonesEjecutivo;
@@ -290,7 +292,7 @@ public class ReservasAerolineaForm extends JFrame {
             asientoSeleccionado = null;
         }
 
-        //updateAsientosVisualization();
+        actualizarVistaBotones();
     }
 
     private String getPreferenciaSeleccionada() {
