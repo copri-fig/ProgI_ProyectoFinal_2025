@@ -10,7 +10,6 @@ public class ReservasAerolineaForm extends JFrame {
     private JRadioButton rbEjecutivo;
     private JRadioButton rbVentana;
     private JRadioButton rbPasillo;
-    private JCheckBox chkAutomatico;
     private JRadioButton rbCentro;
     private JPanel panelAsientos;
     private JPanel panelEconomico;
@@ -30,6 +29,7 @@ public class ReservasAerolineaForm extends JFrame {
     private Asiento asientoSeleccionado;
     private ButtonGroup grupoClase;
     private ButtonGroup grupoPreferencia;
+    private boolean modoAutomatico = true;
 
     //Constructor
     public ReservasAerolineaForm() {
@@ -58,11 +58,19 @@ public class ReservasAerolineaForm extends JFrame {
         setupButtonGroups();
         crearAsientosEjecutivo();
         crearAsientosEconomico();
+        actualizarVistaBotones();
 
         //Procesadores de eventos
         //Acciones para cambiar la clase del boleto
         rbEconomico.addActionListener(e -> cambioClase());
         rbEjecutivo.addActionListener(e -> cambioClase());
+
+        //Boton para cambiar el modo de reserva
+        btnModoAsignacion.addActionListener(e -> {
+            modoAutomatico = !modoAutomatico;
+            actualizarAparienciaBotonModo();
+        });
+
         //Boton para reservar boleto
         btnReservar.addActionListener(e -> {});
         //Boton para limpiar el formulario
@@ -91,6 +99,30 @@ public class ReservasAerolineaForm extends JFrame {
         grupoPreferencia.add(rbVentana);
         grupoPreferencia.add(rbPasillo);
         grupoPreferencia.add(rbCentro);
+    }
+
+    //Metodo para cambiar la apariencia del botón del modo segun el tipo
+    private void actualizarAparienciaBotonModo() {
+        if (modoAutomatico) {
+            // Modo Automático - Verde
+            btnModoAsignacion.setText("MODO AUTOMATICO");
+            btnModoAsignacion.setBackground(new Color(76, 175, 80));
+            btnModoAsignacion.setForeground(Color.WHITE);
+            btnModoAsignacion.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(56, 142, 60), 2),
+                    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+            ));
+        } else {
+            // Modo Manual - Azul
+            btnModoAsignacion.setText("MODO MANUAL");
+            btnModoAsignacion.setBackground(new Color(33, 150, 243));
+            btnModoAsignacion.setForeground(Color.WHITE);
+            btnModoAsignacion.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(25, 118, 210), 2),
+                    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+            ));
+        }
+        actualizarVistaBotones();
     }
 
     //Metodo para crear los botones de los asientos en clase ejecutiva
@@ -205,7 +237,7 @@ public class ReservasAerolineaForm extends JFrame {
                     break;
             }
             button.setForeground(Color.BLACK);
-            button.setEnabled(!chkAutomatico.isSelected());
+            button.setEnabled(!modoAutomatico || asiento == asientoSeleccionado);
         }
     }
 
@@ -228,7 +260,7 @@ public class ReservasAerolineaForm extends JFrame {
     }
 
     private void verificarAsiento(boolean esEconomico, int fila, int columna) {
-        if (chkAutomatico.isSelected()) {
+        if (modoAutomatico) {
             return; // Asignación automática activada
         }
 
@@ -285,7 +317,7 @@ public class ReservasAerolineaForm extends JFrame {
 
     //Metodo que valida si la selección es manual o automática
     private void validarAsignacion() {
-        boolean esAutomatico = chkAutomatico.isSelected();
+        boolean esAutomatico = modoAutomatico;
         //enableManualSelection(!esAutomatico);
 
         if (esAutomatico) {
@@ -308,11 +340,16 @@ public class ReservasAerolineaForm extends JFrame {
         txtCedula.setText("");
         rbEconomico.setSelected(true);
         rbVentana.setSelected(true);
-        chkAutomatico.setSelected(true);
         asientoSeleccionado = null;
         cambioClase();
         validarAsignacion();
         txtNombre.requestFocus();
+
+        // Si no está en modo automático, cambiarlo
+        if (!modoAutomatico) {
+            modoAutomatico = true;
+            actualizarAparienciaBotonModo();
+        }
     }
 
 
