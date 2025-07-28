@@ -154,21 +154,21 @@ public class ReservasAerolineaForm extends JFrame {
     //Metodo para cambiar la apariencia del botón del modo segun el tipo
     private void actualizarAparienciaBotonModo() {
         if (modoAutomatico) {
-            // Modo Automático - Verde
+            // Modo Automático
             btnModoAsignacion.setText("MODO AUTOMATICO");
-            btnModoAsignacion.setBackground(new Color(76, 175, 80));
+            btnModoAsignacion.setBackground(new Color(73, 88, 103));
             btnModoAsignacion.setForeground(Color.WHITE);
             btnModoAsignacion.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(56, 142, 60), 2),
+                    BorderFactory.createLineBorder(new Color(87, 115, 153), 2),
                     BorderFactory.createEmptyBorder(5, 10, 5, 10)
             ));
         } else {
-            // Modo Manual - Azul
+            // Modo Manual
             btnModoAsignacion.setText("MODO MANUAL");
-            btnModoAsignacion.setBackground(new Color(33, 150, 243));
+            btnModoAsignacion.setBackground(new Color(47, 102, 144));
             btnModoAsignacion.setForeground(Color.WHITE);
             btnModoAsignacion.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(25, 118, 210), 2),
+                    BorderFactory.createLineBorder(new Color(58, 124, 165), 2),
                     BorderFactory.createEmptyBorder(5, 10, 5, 10)
             ));
         }
