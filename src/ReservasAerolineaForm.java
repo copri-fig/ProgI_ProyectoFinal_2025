@@ -75,21 +75,21 @@ public class ReservasAerolineaForm extends JFrame {
         btnReservar.addActionListener(e -> {
             // Validar datos
         if (!validarDatos()) return;
-        
+
         String nombre = txtNombre.getText().trim();
         String cedula = txtCedula.getText().trim();
         Pasajero pasajero = new Pasajero(nombre, cedula);
-        
+
         Asiento asientoReservar = null;
-        
-        
-        if (modoAutomatico) {  
+
+
+        if (modoAutomatico) {
             // Asignación automática
             boolean esEconomico = rbEconomico.isSelected();
             String preferencia = getPreferenciaSeleccionada();
-            
+
             asientoReservar = avion.asignarAutomaticamente(esEconomico, preferencia);
-            
+
             if (asientoReservar == null) {
                 JOptionPane.showMessageDialog(this,
                     "No hay asientos disponibles en la clase seleccionada.",
@@ -107,21 +107,22 @@ public class ReservasAerolineaForm extends JFrame {
             }
             asientoReservar = asientoSeleccionado;
         }
-        
+
         // Realizar reserva
         if (avion.reservarAsiento(asientoReservar, pasajero)) {
             String clase = rbEconomico.isSelected() ? "Económica" : "Ejecutiva";
-            String boleto = asientoReservar.getBoleto(clase);
-            
+            String boleto = asientoReservar.boleto(clase);
+
             txtAreaInfo.setText("=== RESERVA EXITOSA ===\n\n" + boleto);
-            updateAsientosVisualization();
+            actualizarVistaBotones();
             limpiarFormulario();
-            
+
             JOptionPane.showMessageDialog(this,
                 "Reserva realizada exitosamente!",
                 "Éxito",
                 JOptionPane.INFORMATION_MESSAGE);
-        } });
+        }});
+
         //Boton para limpiar el formulario
         btnLimpiar.addActionListener(e -> {limpiarFormulario();});
 
@@ -273,15 +274,15 @@ public class ReservasAerolineaForm extends JFrame {
             // Color según ubicación
             switch (asiento.getTipoUbicacion()) {
                 case "ventana":
-                    button.setBackground(new Color(135, 206, 235));
+                    button.setBackground(new Color(154, 168, 153));
                     button.setText("V");
                     break;
                 case "pasillo":
-                    button.setBackground(new Color(250, 101, 7));
+                    button.setBackground(new Color(236, 255, 176));
                     button.setText("P");
                     break;
                 case "centro":
-                    button.setBackground(new Color(255, 182, 193));
+                    button.setBackground(new Color(250, 255, 216));
                     button.setText("C");
                     break;
             }
@@ -407,23 +408,18 @@ public class ReservasAerolineaForm extends JFrame {
             txtNombre.requestFocus();
             return false;
         }
-        
+
         if (txtCedula.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese la cédula del pasajero.");
             txtCedula.requestFocus();
             return false;
         }
-        
-        return true;
-    }
+
+        return true;
+    }
 
     //Main
     public static void main(String[] args) {
-        try{
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         new ReservasAerolineaForm().setVisible(true);
     }
