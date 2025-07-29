@@ -27,12 +27,12 @@ public class Asiento {
         return false;
     }
 
-    public void liberar(){
+    public void liberarAsiento(){
         this.ocupado = false;
         this.pasajero = null;
     }
 
-    public String boleto(String clase){
+    public String imprimirBoleto(String clase){
         if(pasajero != null){
             return pasajero.toString()+
                     "\nClase: " + clase +

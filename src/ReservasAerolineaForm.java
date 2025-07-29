@@ -61,7 +61,7 @@ public class ReservasAerolineaForm extends JFrame {
         actualizarVistaBotones();
 
         //Procesadores de eventos
-        //Acciones para cambiar la clase del boleto
+        //Acciones para cambiar la clase del imprimirBoleto
         rbEconomico.addActionListener(e -> cambioClase());
         rbEjecutivo.addActionListener(e -> cambioClase());
 
@@ -71,7 +71,7 @@ public class ReservasAerolineaForm extends JFrame {
             actualizarAparienciaBotonModo();
         });
 
-        //Boton para reservar boleto
+        //Boton para reservar imprimirBoleto
         btnReservar.addActionListener(e -> {
             // Validar datos
         if (!validarDatos()) return;
@@ -111,7 +111,7 @@ public class ReservasAerolineaForm extends JFrame {
         // Realizar reserva
         if (avion.reservarAsiento(asientoReservar, pasajero)) {
             String clase = rbEconomico.isSelected() ? "Económica" : "Ejecutiva";
-            String boleto = asientoReservar.boleto(clase);
+            String boleto = asientoReservar.imprimirBoleto(clase);
 
             txtAreaInfo.setText("=== RESERVA EXITOSA ===\n\n" + boleto);
             actualizarVistaBotones();
@@ -126,7 +126,7 @@ public class ReservasAerolineaForm extends JFrame {
         //Boton para limpiar el formulario
         btnLimpiar.addActionListener(e -> {limpiarFormulario();});
 
-        //Boton que imprime el ultimo boleto registrado
+        //Boton que imprime el ultimo imprimirBoleto registrado
         btnMostrarBoleto.addActionListener(e -> {
             if (txtAreaInfo.getText().contains("RESERVA EXITOSA")) {
                 JOptionPane.showMessageDialog(this, txtAreaInfo.getText(), "Último Boleto", JOptionPane.INFORMATION_MESSAGE);
@@ -418,9 +418,12 @@ public class ReservasAerolineaForm extends JFrame {
         return true;
     }
 
+    /*
     //Main
     public static void main(String[] args) {
 
         new ReservasAerolineaForm().setVisible(true);
     }
+
+     */
 }
